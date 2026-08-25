@@ -10,6 +10,12 @@ def format_response(command, result):
     if command == "df -h":
         return format_disk(output)
 
+    if command == "ps aux --sort=-%cpu":
+        return format_processes(output, "CPU")
+
+    if command == "ps aux --sort=-%mem":
+        return format_processes(output, "RAM")
+
     if command == "pwd":
         return f"📁 Current directory:\n{output}"
 
@@ -27,6 +33,9 @@ def format_response(command, result):
 
     if command == "ls":
         return f"📂 Files and directories:\n{output}"
+
+    if command == "uname":
+        return f"🖥️ System Information:\n{output}"
 
     return output
 
@@ -58,7 +67,6 @@ def format_disk(output):
     if len(lines) < 2:
         return output
 
-    # Find the root filesystem (/)
     for line in lines[1:]:
         parts = line.split()
 
@@ -74,3 +82,20 @@ def format_disk(output):
             )
 
     return output
+
+
+def format_processes(output, sort_type):
+    lines = output.splitlines()
+
+    if len(lines) < 2:
+        return "No process information available."
+
+    header = lines[0]
+    processes = lines[1:6]
+
+    return (
+        f"⚙️ Top Processes by {sort_type}\n"
+        "----------------------------\n"
+        f"{header}\n"
+        + "\n".join(processes)
+    )
