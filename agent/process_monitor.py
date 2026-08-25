@@ -13,7 +13,7 @@ def get_top_processes(limit=10):
             processes.append({
                 "pid": info["pid"],
                 "name": info["name"],
-                "cpu_percent": info["cpu_percent"],
+                "cpu_percent": round(info["cpu_percent"], 2),
                 "memory_percent": round(info["memory_percent"], 2)
             })
 
@@ -21,7 +21,7 @@ def get_top_processes(limit=10):
             continue
 
     processes.sort(
-        key=lambda x: x["cpu_percent"],
+        key=lambda process: process["cpu_percent"],
         reverse=True
     )
 
